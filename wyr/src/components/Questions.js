@@ -3,6 +3,7 @@ import {Progress, Checkbox} from 'semantic-ui-react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {handleQuestionAnswer} from '../actions/combine_actions'
+import Error from './Error'
 
 class Questions extends Component{
     state={
@@ -52,12 +53,13 @@ class Questions extends Component{
    
     
     render(){
-        const {author,opt1,opt2,avatar,opt1_val,opt2_val,total,opt1_vote,opt2_vote,AuthenUser}=this.props
+        const {author,opt1,opt2,avatar,opt1_val,opt2_val,total,opt1_vote,opt2_vote,AuthenUser,id_check}=this.props
         const prc_opt1= Math.round((parseInt(opt1_val)/total)*100)
         const prc_opt2= Math.round((parseInt(opt2_val)/total)*100)
         return(
             <Fragment>
-            <div className="new_que">
+            {id_check===true ? 
+            (<div className="new_que">
                 <div className="avatar_n">
                     <img className="avatar_nn" alt={author} src={avatar}/>
                     <p>Asked By</p>
@@ -116,7 +118,10 @@ class Questions extends Component{
                     
                 }
             </div>
-               
+            )
+            :
+            <Error/>
+    }
             
     
             </Fragment>
@@ -126,17 +131,18 @@ class Questions extends Component{
 function mapStateToProps({user_reducer,question_reducer,AuthenUser},props){
     const {id}=props.match.params
     return{
-        author:question_reducer[id].author,
-        opt1:question_reducer[id].optionOne.text,
-        opt2:question_reducer[id].optionTwo.text,
-        avatar:user_reducer[question_reducer[id].author].avatarURL,
-        opt1_val:question_reducer[id].optionOne.votes.length,
-        opt2_val:question_reducer[id].optionTwo.votes.length,
+        author:question_reducer[id] !==undefined ? question_reducer[id].author : null ,
+        opt1:question_reducer[id] !==undefined ? question_reducer[id].optionOne.text : null,
+        opt2:question_reducer[id] !==undefined ? question_reducer[id].optionTwo.text : null,
+        avatar:question_reducer[id] !==undefined ? user_reducer[question_reducer[id].author].avatarURL : null,
+        opt1_val:question_reducer[id] !== undefined ? question_reducer[id].optionOne.votes.length : null,
+        opt2_val:question_reducer[id] !==undefined ? question_reducer[id].optionTwo.votes.length : null,
         total:Object.keys(user_reducer).length,
-        opt1_vote:question_reducer[id].optionOne.votes,
-        opt2_vote:question_reducer[id].optionTwo.votes,
+        opt1_vote:question_reducer[id] !== undefined ? question_reducer[id].optionOne.votes : null,
+        opt2_vote:question_reducer[id] !== undefined ? question_reducer[id].optionTwo.votes : null,
         AuthenUser,
         id,
+        id_check:Object.keys(question_reducer).includes(id)
 
     }
 }
