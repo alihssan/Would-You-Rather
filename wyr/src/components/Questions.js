@@ -8,7 +8,7 @@ class Questions extends Component{
     state={
         checked1:false,
         checked2:false,
-        checked_class:''
+        checked_class:'',
 
     }
     handleSubmit=()=>{
@@ -52,13 +52,11 @@ class Questions extends Component{
    
     
     render(){
-        const {author,opt1,opt2,avatar,opt1_val,opt2_val,total,opt1_vote,opt2_vote,AuthenUser,id_check}=this.props
+        const {author,opt1,opt2,avatar,opt1_val,opt2_val,total,opt1_vote,opt2_vote,AuthenUser}=this.props
         const prc_opt1= Math.round((parseInt(opt1_val)/total)*100)
         const prc_opt2= Math.round((parseInt(opt2_val)/total)*100)
-
         return(
             <Fragment>
-            {id_check===true ? (
             <div className="new_que">
                 <div className="avatar_n">
                     <img className="avatar_nn" alt={author} src={avatar}/>
@@ -67,7 +65,8 @@ class Questions extends Component{
                 </div>
                 {(opt1_vote.includes(AuthenUser) || opt2_vote.includes(AuthenUser)) && (
                 <Fragment>
-                <div className="option-frame">
+                <div className="option-frame" style={{backgroundColor: (opt1_vote.includes(AuthenUser)===true 
+                    && opt2_vote.includes(AuthenUser)!==true) && 'greenyellow'}}>
                     <p>{opt1}</p>
                     <p>{opt1_val} out of {total}</p>
                     <div className="loader">
@@ -75,7 +74,8 @@ class Questions extends Component{
                     </div>
                     
                 </div>
-                <div className="option-frame">
+                <div className="option-frame" style={{backgroundColor: (opt2_vote.includes(AuthenUser)===true 
+                    && opt1_vote.includes(AuthenUser)!==true) && 'greenyellow'}}>
                     <p>{opt2}</p>
                     <p>{opt2_val} out of {total}</p>
 
@@ -116,14 +116,9 @@ class Questions extends Component{
                     
                 }
             </div>
-            )
-            :
-            (
-                <div className="error">
-                   <center><h1>You Haven't </h1></center>
-                </div>
-            )
-    }
+               
+            
+    
             </Fragment>
         )
     }
@@ -142,7 +137,6 @@ function mapStateToProps({user_reducer,question_reducer,AuthenUser},props){
         opt2_vote:question_reducer[id].optionTwo.votes,
         AuthenUser,
         id,
-        id_check: Object.keys(question_reducer).includes(id),
 
     }
 }

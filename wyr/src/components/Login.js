@@ -2,7 +2,7 @@ import React,{Component,Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Dropdown} from 'semantic-ui-react'
 import { authuser} from '../actions/authen'
-import {Redirect} from 'react-router-dom'
+import {Redirect,withRouter} from 'react-router-dom'
 
 
 class Login extends Component{
@@ -27,7 +27,7 @@ class Login extends Component{
         }
     }
     render(){
-        console.log(this.props.history)
+        console.log(this.props.location)
         const {users,name,Avatar,user_reducer,AuthenUser}=this.props
         const {user_name}=this.state.user_name
         const {from} = this.props.location.state || {from: {pathname: '/'}}
@@ -86,4 +86,4 @@ function mapStateToProps({user_reducer,AuthenUser}){
         AuthenUser
         }
 }
-export default connect(mapStateToProps)(Login)
+export default withRouter(connect(mapStateToProps)(Login))

@@ -4,8 +4,8 @@ import {connect} from 'react-redux'
 
 class QuestionDrawer extends Component{
     state={
-        ans:true,
-        unans:false,
+        ans:false,
+        unans:true,
         color:true
     }
     handleAns=(e)=>{

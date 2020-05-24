@@ -6,9 +6,10 @@ import Nav from './Nav'
 import {connect} from 'react-redux'
 import {handleData} from '../actions/combine_actions'
 import LoadingBar from 'react-redux-loading'
-import {BrowserRouter as Router,Route,Redirect} from 'react-router-dom'
+import {BrowserRouter as Router,Route,Redirect,Switch} from 'react-router-dom'
 import Login from './Login'
 import Questions from './Questions'
+import Error from './Error'
 
 class App extends Component{
 
@@ -38,24 +39,38 @@ class App extends Component{
             )
 
             }
-            <Route path='/login' exact component={Login}/>
-
-            <Fragment>
-            <Route path='/' exact render={()=>(
-              loadingBar===true ? <Redirect to='/login'/> :<QuestionDrawer/>
+	<Fragment>
+	  <Switch>
+            <Route path='/login' render={(props)=>(<Login/>)}/>
+            <Route path='/' exact render={(props)=>(
+              loadingBar===true ? <Redirect to={{
+                pathname: '/login',
+                state: {from: props.location}
+            }}/> :<QuestionDrawer/>
             )}/>
-            <Route path='/add' exact render={()=>(
-              loadingBar===true ? <Redirect to='/login'/>:<Ask/>
-
-            )}/>
-            <Route path='/leaderboard' exact render={()=>(
-              loadingBar===true ? <Redirect to='/login'/> :<Leaderboard/>
-
-            )}/>
-             <Route path='/question/:id' exact render={()=>(
-              loadingBar===true ? <Redirect to='/login'/> :<Questions/>
+            <Route path='/add' render={(props)=>(
+              loadingBar===true ? <Redirect to={{
+                pathname: '/login',
+                state: {from: props.location}
+            }}/>:<Ask/>
 
             )}/>
+            <Route path='/leaderboard' render={(props)=>(
+              loadingBar===true ? <Redirect to={{
+                pathname: '/login',
+                state: {from: props.location}
+            }}/> :<Leaderboard/>
+
+            )}/>
+             <Route path='/question/:id' render={(props)=>(
+              loadingBar===true ? <Redirect to={{
+                pathname: '/login',
+                state: {from: props.location}
+            }}/> :<Questions/>
+
+            )}/>
+            <Route component={Error}/>
+	</Switch>
             </Fragment>
           
             
